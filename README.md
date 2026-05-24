@@ -10,6 +10,7 @@ This repository intentionally contains only code that is generic across game mod
 - CounterStrikeSharp network state-change helpers
 - shared air-jump/double-jump movement primitives
 - small SQLite primitives shared by plugin persistence layers
+- dashboard/web integration primitives for authenticated JSON APIs, per-player polling, and push de-duplication
 
 Gameplay systems stay in their plugin repositories. COD class/loadout/perk behavior belongs in `reclaimcs-cod`; infection, zombie abilities, and human/zombie round logic belong in `reclaimcs-zombie`.
 
