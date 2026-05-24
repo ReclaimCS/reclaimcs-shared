@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ReclaimCS.Shared/ReclaimCS.Shared.csproj" />
+  </Folder>
+</Solution>
