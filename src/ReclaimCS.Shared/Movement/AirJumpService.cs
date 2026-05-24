@@ -66,11 +66,7 @@ public sealed class AirJumpService
     {
         var currentVelocity = pawn.AbsVelocity;
         var effectiveUpForce = Math.Max(1.0f, upForce);
-        var zVelocity = currentVelocity.Z > 0.0f
-            ? currentVelocity.Z + effectiveUpForce
-            : effectiveUpForce;
-
-        pawn.Teleport(velocity: new Vector(currentVelocity.X, currentVelocity.Y, zVelocity));
+        pawn.Teleport(velocity: new Vector(currentVelocity.X, currentVelocity.Y, effectiveUpForce));
     }
 
     public static bool IsActuallyGrounded(CCSPlayerPawn pawn)
