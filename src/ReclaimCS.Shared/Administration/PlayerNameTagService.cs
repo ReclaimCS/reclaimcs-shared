@@ -30,6 +30,9 @@ public sealed class PlayerNameTagService
 
     public void Apply(CCSPlayerController player)
     {
+        if (!_adminOptions().EnableScoreboardTags)
+            return;
+
         var tag = ResolveTag(player);
         if (tag == null)
         {
