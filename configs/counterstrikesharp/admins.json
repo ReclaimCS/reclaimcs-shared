@@ -1,0 +1,22 @@
+{
+  "Hoppi": {
+    "identity": "76561198311205051",
+    "immunity": 100,
+    "flags": [
+      "@css/root"
+    ],
+    "groups": [
+      "#css/admin"
+    ]
+  },
+  "Bramestv": {
+    "identity": "76561199648001753",
+    "immunity": 100,
+    "flags": [
+      "@css/root"
+    ],
+    "groups": [
+      "#css/admin"
+    ]
+  }
+}
