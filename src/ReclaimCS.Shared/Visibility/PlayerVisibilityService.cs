@@ -148,7 +148,10 @@ public sealed class PlayerVisibilityService
                     RemoveEntity(info, subject.PlayerPawn.Value);
 
                 if (mask.HideWeapons)
+                {
                     RemovePlayerWeapons(info, subject);
+                    RemoveOwnedEquipmentEntities(info, subject);
+                }
 
                 foreach (var entity in mask.ExtraEntities)
                     RemoveEntity(info, entity);
@@ -294,10 +297,90 @@ public sealed class PlayerVisibilityService
             RemoveEntity(info, weaponHandle.Value);
     }
 
+    private static void RemoveOwnedEquipmentEntities(CCheckTransmitInfo info, CCSPlayerController player)
+    {
+        if (player.PlayerPawn.Value is not { IsValid: true } pawn)
+            return;
+
+        foreach (var entity in Utilities.GetAllEntities())
+        {
+            if (!entity.IsValid || !ShouldHideOwnedEquipmentEntity(entity.DesignerName))
+                continue;
+
+            CBaseModelEntity modelEntity;
+            try
+            {
+                modelEntity = entity.As<CBaseModelEntity>();
+            }
+            catch
+            {
+                continue;
+            }
+
+            if (modelEntity is not { IsValid: true })
+                continue;
+
+            if (IsOwnedByPlayerOrWeapon(modelEntity, player, pawn))
+                RemoveEntity(info, modelEntity);
+        }
+    }
+
+    private static bool ShouldHideOwnedEquipmentEntity(string designerName)
+    {
+        if (string.IsNullOrWhiteSpace(designerName))
+            return false;
+
+        return designerName.Contains("weapon", StringComparison.OrdinalIgnoreCase)
+            || designerName.Contains("knife", StringComparison.OrdinalIgnoreCase)
+            || designerName.Contains("viewmodel", StringComparison.OrdinalIgnoreCase)
+            || designerName.Contains("c4", StringComparison.OrdinalIgnoreCase)
+            || designerName.Contains("bomb", StringComparison.OrdinalIgnoreCase)
+            || designerName.Contains("defuser", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsOwnedByPlayerOrWeapon(
+        CBaseModelEntity entity,
+        CCSPlayerController player,
+        CCSPlayerPawn pawn)
+    {
+        var owner = entity.OwnerEntity.Value;
+        if (owner is { IsValid: true } && IsPlayerOrOwnedWeapon(owner, player, pawn))
+            return true;
+
+        var effectEntity = entity.EffectEntity.Value;
+        return effectEntity is { IsValid: true } && IsPlayerOrOwnedWeapon(effectEntity, player, pawn);
+    }
+
+    private static bool IsPlayerOrOwnedWeapon(CBaseEntity entity, CCSPlayerController player, CCSPlayerPawn pawn)
+    {
+        if (entity.EntityHandle == pawn.EntityHandle || entity.EntityHandle == player.EntityHandle)
+            return true;
+
+        var weaponServices = pawn.WeaponServices;
+        if (weaponServices == null)
+            return false;
+
+        var activeWeapon = weaponServices.ActiveWeapon.Value;
+        if (activeWeapon is { IsValid: true } && entity.EntityHandle == activeWeapon.EntityHandle)
+            return true;
+
+        if (weaponServices.MyWeapons == null)
+            return false;
+
+        foreach (var weaponHandle in weaponServices.MyWeapons)
+        {
+            var weapon = weaponHandle.Value;
+            if (weapon is { IsValid: true } && entity.EntityHandle == weapon.EntityHandle)
+                return true;
+        }
+
+        return false;
+    }
+
     private static void RemoveEntity(CCheckTransmitInfo info, CEntityInstance? entity)
     {
         if (entity is { IsValid: true })
-            info.TransmitEntities.Remove(entity);
+            info.TransmitEntities.Remove((int)entity.Index);
     }
 
     private static bool TryGetPlayerSlot(CCSPlayerController player, out int slot)
