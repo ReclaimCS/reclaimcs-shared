@@ -150,7 +150,7 @@ public sealed class PlayerVisibilityService
                 if (mask.HideWeapons)
                 {
                     RemovePlayerWeapons(info, subject);
-                    RemoveOwnedEquipmentEntities(info, subject);
+                    RemoveOwnedEquipmentEntities(info, subject, mask.NearbyEquipmentRadius);
                 }
 
                 foreach (var entity in mask.ExtraEntities)
@@ -197,6 +197,7 @@ public sealed class PlayerVisibilityService
 
             mask.HidePlayerPawn |= request.Options.HidePlayerPawn;
             mask.HideWeapons |= request.Options.HideWeapons;
+            mask.NearbyEquipmentRadius = MathF.Max(mask.NearbyEquipmentRadius, request.Options.NearbyEquipmentRadius);
 
             var extraEntities = request.Options.ExtraEntities;
             if (extraEntities == null)
@@ -297,7 +298,7 @@ public sealed class PlayerVisibilityService
             RemoveEntity(info, weaponHandle.Value);
     }
 
-    private static void RemoveOwnedEquipmentEntities(CCheckTransmitInfo info, CCSPlayerController player)
+    private static void RemoveOwnedEquipmentEntities(CCheckTransmitInfo info, CCSPlayerController player, float nearbyRadius)
     {
         if (player.PlayerPawn.Value is not { IsValid: true } pawn)
             return;
@@ -320,7 +321,8 @@ public sealed class PlayerVisibilityService
             if (modelEntity is not { IsValid: true })
                 continue;
 
-            if (IsOwnedByPlayerOrWeapon(modelEntity, player, pawn))
+            if (IsOwnedByPlayerOrWeapon(modelEntity, player, pawn)
+                || IsNearbyAttachedEquipment(modelEntity, pawn, nearbyRadius))
                 RemoveEntity(info, modelEntity);
         }
     }
@@ -336,6 +338,33 @@ public sealed class PlayerVisibilityService
             || designerName.Contains("c4", StringComparison.OrdinalIgnoreCase)
             || designerName.Contains("bomb", StringComparison.OrdinalIgnoreCase)
             || designerName.Contains("defuser", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsNearbyAttachedEquipment(CBaseModelEntity entity, CCSPlayerPawn pawn, float nearbyRadius)
+    {
+        if (nearbyRadius <= 0 || pawn.AbsOrigin == null || entity.AbsOrigin == null)
+            return false;
+
+        if (!ShouldHideNearbyAttachedEquipmentEntity(entity.DesignerName))
+            return false;
+
+        var pawnOrigin = pawn.AbsOrigin;
+        var entityOrigin = entity.AbsOrigin;
+        var dx = entityOrigin.X - pawnOrigin.X;
+        var dy = entityOrigin.Y - pawnOrigin.Y;
+        var dz = entityOrigin.Z - pawnOrigin.Z;
+
+        return dx * dx + dy * dy + dz * dz <= nearbyRadius * nearbyRadius;
+    }
+
+    private static bool ShouldHideNearbyAttachedEquipmentEntity(string designerName)
+    {
+        if (string.IsNullOrWhiteSpace(designerName))
+            return false;
+
+        return designerName.Contains("knife", StringComparison.OrdinalIgnoreCase)
+            || designerName.Contains("viewmodel", StringComparison.OrdinalIgnoreCase)
+            || designerName.Contains("weaponworld", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsOwnedByPlayerOrWeapon(
@@ -423,6 +452,8 @@ public sealed class PlayerVisibilityService
         public bool HidePlayerPawn { get; set; }
 
         public bool HideWeapons { get; set; }
+
+        public float NearbyEquipmentRadius { get; set; }
 
         public List<CEntityInstance?> ExtraEntities { get; } = [];
 

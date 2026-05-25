@@ -14,6 +14,8 @@ public sealed class PlayerVisibilityOptions
 
     public bool HideFromSelf { get; init; }
 
+    public float NearbyEquipmentRadius { get; init; } = 96f;
+
     public PlayerVisibilityViewerFilter? ShouldHideFromViewer { get; init; }
 
     public PlayerVisibilityExtraEntityProvider? ExtraEntities { get; init; }
