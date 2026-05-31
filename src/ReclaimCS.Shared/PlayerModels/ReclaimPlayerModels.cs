@@ -4,6 +4,7 @@ public static class ReclaimPlayerModels
 {
     public const string ReclaimCharactersWorkshopAddonId = "3732494585";
     public const string ZombiePlayerModelsWorkshopAddonId = "3170427476";
+    public const string CodPluginPackWorkshopAddonId = "3733924238";
 
     public static readonly string[] ZombieModWorkshopAddonIds =
     [
@@ -36,6 +37,14 @@ public static class ReclaimPlayerModels
         public const string DeadpoolReborn = "deadpool_reborn";
         public const string GhostTactical = "ghost_tactical";
         public const string MasterChiefNoHitbox = "master_chief_nohitbox";
+
+        public const string Nozb1BobaFett = "nozb1_boba_fett";
+        public const string Nozb1Gsg9 = "nozb1_gsg9";
+        public const string Nozb1PrisonerTurok = "nozb1_prisoner_turok";
+        public const string Nozb1JailPolice = "nozb1_jail_police";
+        public const string Nozb1ZombieOfficer = "nozb1_zombie_officer";
+        public const string Nozb1ThrillerZombie = "nozb1_thriller_zombie";
+        public const string Nozb1PunkZombie = "nozb1_punk_zombie";
     }
 
     public static class ModelPaths
@@ -66,6 +75,21 @@ public static class ReclaimPlayerModels
         public const string DeadpoolReborn = "agents/models/reborn/deadpool/deadpool.vmdl";
         public const string GhostTactical = "characters/models/kolka/ghost/ghost.vmdl";
         public const string MasterChiefNoHitbox = "agents/models/s2ze/master_chief/master_chief_nohitbox.vmdl";
+
+        public const string Nozb1BobaFett = "characters/models/nozb1/boba_feet_player_model/boba_feet.vmdl";
+        public const string Nozb1BobaFettArms = "characters/models/nozb1/boba_feet_player_model/boba_feet_arm.vmdl";
+        public const string Nozb1Gsg9 = "characters/models/nozb1/gsg9_player_model/gsg9_player_model.vmdl";
+        public const string Nozb1Gsg9Arms = "characters/models/nozb1/gsg9_player_model/gsg9_pm_arm.vmdl";
+        public const string Nozb1PrisonerTurok = "characters/models/nozb1/a_prisoner_turok_player_model/a_prisoner_turok_player_model.vmdl";
+        public const string Nozb1PrisonerTurokArms = "characters/models/nozb1/a_prisoner_turok_player_model/a_prisoner_turok_pm_arm.vmdl";
+        public const string Nozb1JailPolice = "characters/models/nozb1/jail_police_player_model/jail_police_player_model.vmdl";
+        public const string Nozb1JailPoliceArms = "characters/models/nozb1/jail_police_player_model/jail_police_pm_arm.vmdl";
+        public const string Nozb1ZombieOfficer = "characters/models/nozb1/zombie_officer_player_model/zombie_officer_player_model.vmdl";
+        public const string Nozb1ZombieOfficerArms = "characters/models/nozb1/zombie_officer_player_model/zombie_officer_pm_arm.vmdl";
+        public const string Nozb1ThrillerZombie = "characters/models/nozb1/thriller_zombie_player_model/thriller_zombie_player_model.vmdl";
+        public const string Nozb1ThrillerZombieArms = "characters/models/nozb1/thriller_zombie_player_model/thriller_zombie_pm_arm.vmdl";
+        public const string Nozb1PunkZombie = "characters/models/nozb1/punk_zombie_player_model/punk_zombie_player_model.vmdl";
+        public const string Nozb1PunkZombieArms = "characters/models/nozb1/punk_zombie_player_model/punk_zombie_pm_arm.vmdl";
     }
 
     public static IReadOnlyList<PlayerModelDefinition> All { get; } =
@@ -91,7 +115,15 @@ public static class ReclaimPlayerModels
         ZombieMod(ModelIds.VectorHunter, "Vector Hunter", ModelPaths.VectorHunter, PlayerModelRole.Human),
         ZombieMod(ModelIds.DeadpoolReborn, "VIP Heavy Deadpool", ModelPaths.DeadpoolReborn, PlayerModelRole.Human),
         ZombieMod(ModelIds.GhostTactical, "VIP Tactical Ghost", ModelPaths.GhostTactical, PlayerModelRole.Human),
-        ZombieMod(ModelIds.MasterChiefNoHitbox, "Master Chief No-Hitbox", ModelPaths.MasterChiefNoHitbox, PlayerModelRole.Human)
+        ZombieMod(ModelIds.MasterChiefNoHitbox, "Master Chief No-Hitbox", ModelPaths.MasterChiefNoHitbox, PlayerModelRole.Human),
+
+        CodPluginPack(ModelIds.Nozb1BobaFett, "NOZB1 Boba Fett", ModelPaths.Nozb1BobaFett, PlayerModelRole.Human, armModelPath: ModelPaths.Nozb1BobaFettArms, sourceWorkshopId: "3442147119"),
+        CodPluginPack(ModelIds.Nozb1Gsg9, "NOZB1 GSG9", ModelPaths.Nozb1Gsg9, PlayerModelRole.Human, armModelPath: ModelPaths.Nozb1Gsg9Arms, sourceWorkshopId: "3194847839"),
+        CodPluginPack(ModelIds.Nozb1PrisonerTurok, "NOZB1 Prisoner Turok", ModelPaths.Nozb1PrisonerTurok, PlayerModelRole.Human, armModelPath: ModelPaths.Nozb1PrisonerTurokArms, sourceWorkshopId: "3192022574"),
+        CodPluginPack(ModelIds.Nozb1JailPolice, "NOZB1 Jail Police", ModelPaths.Nozb1JailPolice, PlayerModelRole.Human, armModelPath: ModelPaths.Nozb1JailPoliceArms, sourceWorkshopId: "3192022574"),
+        CodPluginPack(ModelIds.Nozb1ZombieOfficer, "NOZB1 Zombie Officer", ModelPaths.Nozb1ZombieOfficer, PlayerModelRole.Zombie, armModelPath: ModelPaths.Nozb1ZombieOfficerArms, sourceWorkshopId: "3215759704"),
+        CodPluginPack(ModelIds.Nozb1ThrillerZombie, "NOZB1 Thriller Zombie", ModelPaths.Nozb1ThrillerZombie, PlayerModelRole.Zombie, armModelPath: ModelPaths.Nozb1ThrillerZombieArms, sourceWorkshopId: "3214556733"),
+        CodPluginPack(ModelIds.Nozb1PunkZombie, "NOZB1 Punk Zombie", ModelPaths.Nozb1PunkZombie, PlayerModelRole.Zombie, armModelPath: ModelPaths.Nozb1PunkZombieArms, sourceWorkshopId: "3214529526")
     ];
 
     public static IEnumerable<PlayerModelDefinition> ReclaimCharacters =>
@@ -99,6 +131,9 @@ public static class ReclaimPlayerModels
 
     public static IEnumerable<PlayerModelDefinition> ZombieModCharacters =>
         All.Where(model => model.Pack == PlayerModelPack.ZombieMod);
+
+    public static IEnumerable<PlayerModelDefinition> CodPluginPackCharacters =>
+        All.Where(model => model.Pack == PlayerModelPack.CodPluginPack);
 
     public static IEnumerable<PlayerModelDefinition> Humans =>
         All.Where(model => model.Roles.HasFlag(PlayerModelRole.Human));
@@ -209,6 +244,31 @@ public static class ReclaimPlayerModels
             Pack = PlayerModelPack.ZombieMod,
             Roles = roles,
             WorkshopAddonIds = [..ZombieModWorkshopAddonIds]
+        };
+    }
+
+    private static PlayerModelDefinition CodPluginPack(
+        string id,
+        string name,
+        string modelPath,
+        PlayerModelRole roles,
+        string armModelPath = "",
+        string sourceWorkshopId = "")
+    {
+        return new PlayerModelDefinition
+        {
+            Id = id,
+            Name = name,
+            ModelPath = modelPath,
+            Pack = PlayerModelPack.CodPluginPack,
+            Roles = roles,
+            WorkshopAddonIds = [CodPluginPackWorkshopAddonId],
+            SourceUrl = string.IsNullOrWhiteSpace(sourceWorkshopId)
+                ? "https://steamcommunity.com/id/nozb1/myworkshopfiles/?appid=730"
+                : $"https://steamcommunity.com/sharedfiles/filedetails/?id={sourceWorkshopId}",
+            DateAdded = "2026-05-28",
+            Contributor = "NOZB1",
+            ArmModelPath = armModelPath
         };
     }
 }

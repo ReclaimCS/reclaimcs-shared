@@ -38,6 +38,9 @@ public static class PawnNetworkStateExtensions
     public static void MarkEconStateChanged(this CBaseEntity entity)
     {
         TryMarkStateChanged(entity, "CEconEntity", "m_AttributeManager");
+        TryMarkStateChanged(entity, "CEconEntity", "m_nFallbackPaintKit");
+        TryMarkStateChanged(entity, "CEconEntity", "m_nFallbackSeed");
+        TryMarkStateChanged(entity, "CEconEntity", "m_flFallbackWear");
         TryMarkStateChanged(entity, "CAttributeContainer", "m_Item");
         TryMarkStateChanged(entity, "CEconItemView", "m_iItemDefinitionIndex");
         TryMarkStateChanged(entity, "CEconItemView", "m_iItemIDHigh");

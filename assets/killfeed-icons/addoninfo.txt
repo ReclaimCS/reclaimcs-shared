@@ -1,0 +1,9 @@
+"AddonInfo"
+{
+    "addonSteamAppID" "730"
+    "addontitle" "ReclaimCS Killfeed Icons"
+    "addonversion" "1"
+    "addontagline" "Custom killfeed equipment icons for ReclaimCS servers"
+    "addonauthor" "ReclaimCS"
+    "addonContent_Script" "1"
+}

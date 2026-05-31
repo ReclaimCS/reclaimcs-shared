@@ -13,7 +13,8 @@ public sealed class AirJumpService
         IAirJumpState state,
         bool enabled,
         int additionalJumps,
-        float upForce)
+        float upForce,
+        bool allowInstantJump = true)
     {
         if (player.PlayerPawn.Value is not { IsValid: true } pawn)
             return;
@@ -24,11 +25,12 @@ public sealed class AirJumpService
             return;
         }
 
+        var currentFlags = (PlayerFlags)pawn.Flags;
         var currentButtons = player.Buttons;
-        var wasJumping = state.PreviousJumpButtons.HasFlag(PlayerButtons.Jump);
-        var isJumping = currentButtons.HasFlag(PlayerButtons.Jump);
-        var wasOnGround = state.WasOnGroundLastTick;
-        var isOnGround = IsActuallyGrounded(pawn);
+        var wasOnGround = (state.PreviousJumpFlags & PlayerFlags.FL_ONGROUND) != 0;
+        var isOnGround = (currentFlags & PlayerFlags.FL_ONGROUND) != 0;
+        var wasJumping = (state.PreviousJumpButtons & PlayerButtons.Jump) != 0;
+        var isJumping = (currentButtons & PlayerButtons.Jump) != 0;
 
         if (isOnGround)
         {
@@ -48,10 +50,12 @@ public sealed class AirJumpService
             && state.AirJumpsUsed < maxTotalJumps)
         {
             state.AirJumpsUsed++;
-            ApplyAirJumpVelocity(pawn, upForce);
+            if (allowInstantJump || CanForceAirJump(pawn))
+                ApplyAirJumpVelocity(pawn, upForce);
         }
 
         state.PreviousJumpButtons = currentButtons;
+        state.PreviousJumpFlags = currentFlags;
         state.WasOnGroundLastTick = isOnGround;
     }
 
@@ -59,14 +63,19 @@ public sealed class AirJumpService
     {
         state.AirJumpsUsed = 0;
         state.PreviousJumpButtons = currentButtons;
+        state.PreviousJumpFlags = PlayerFlags.FL_ONGROUND;
         state.WasOnGroundLastTick = true;
     }
 
     public static void ApplyAirJumpVelocity(CCSPlayerPawn pawn, float upForce)
     {
-        var currentVelocity = pawn.AbsVelocity;
         var effectiveUpForce = Math.Max(1.0f, upForce);
-        pawn.Teleport(velocity: new Vector(currentVelocity.X, currentVelocity.Y, effectiveUpForce));
+        pawn.AbsVelocity.Z = effectiveUpForce;
+    }
+
+    public static bool CanForceAirJump(CCSPlayerPawn pawn)
+    {
+        return pawn.AbsVelocity.Z < 0.0f;
     }
 
     public static bool IsActuallyGrounded(CCSPlayerPawn pawn)

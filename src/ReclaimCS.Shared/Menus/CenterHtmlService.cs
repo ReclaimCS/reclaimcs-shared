@@ -112,6 +112,25 @@ public sealed class CenterHtmlService
         _states.Clear();
     }
 
+    public bool HasActiveEntries()
+    {
+        var now = DateTime.UtcNow;
+        foreach (var (playerKey, state) in _states)
+        {
+            lock (state.Sync)
+            {
+                state.Transient.RemoveAll(entry => entry.ExpiresAtUtc <= now);
+                if (state.Persistent.Count > 0 || state.Transient.Count > 0)
+                    return true;
+
+                if (!state.HadOutput)
+                    _states.TryRemove(playerKey, out _);
+            }
+        }
+
+        return false;
+    }
+
     public void UpdatePlayer(CCSPlayerController player)
     {
         if (!TryGetPlayerKey(player, out var playerKey) || !_states.TryGetValue(playerKey, out var state))
